@@ -239,6 +239,31 @@ body::after{
 @keyframes blink{0%,100%{opacity:0.4}50%{opacity:1}}
 
 /* ============================================
+   HINT BOX
+   ============================================ */
+.hint-box{
+  max-width:1400px;margin:0 auto;padding:0 clamp(24px,6vw,100px);
+  opacity:0;transform:translateY(16px);
+  transition:all 0.8s var(--ease);
+}
+.hint-box.visible{opacity:1;transform:translateY(0)}
+.hint-box-inner{
+  display:flex;align-items:flex-start;gap:12px;
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:10px;padding:16px 20px;
+  box-shadow:var(--shadow-card);
+  font-size:0.78rem;line-height:1.8;color:var(--text-dim);
+  max-width:520px;
+}
+.hint-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--accent);
+  flex-shrink:0;margin-top:8px;opacity:0.5;
+}
+.hint-hl{
+  color:var(--accent);font-weight:500;
+}
+
+/* ============================================
    MOVIE ROW
    ============================================ */
 .movie-row{
@@ -534,6 +559,18 @@ body::after{
      MOVIE ROWS
      ============================================ -->
 <main id="movies">
+
+<!-- HINT -->
+<div class="hint-box" data-animate>
+  <div class="hint-box-inner">
+    <span class="hint-dot"></span>
+    <div>
+      <p>① 点击<span class="hint-hl">阅读评语</span>即可窥探 mwzx 的专属锐评</p>
+      <p>② 有的图片可以<span class="hint-hl">点击切换</span>（其实最多也就两张。。）</p>
+      <p>③ 标注了<span class="hint-hl">🎵 专属配乐</span>的是 mwzx 专门找的很合适的配乐！</p>
+    </div>
+  </div>
+</div>
 
 <!-- 01 电锯人 -->
 <article class="movie-row">
