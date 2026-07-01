@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Every frame is a moment we breathed together</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,200;14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   TOKENS
+   ============================================ */
+:root{
+  --bg:#f8f7f4;
+  --bg-card:#fff;
+  --text:#1a1a1a;
+  --text-dim:#777;
+  --text-faint:#bbb;
+  --accent:#d4542c;
+  --border:#e8e5e0;
+  --shadow-card:0 2px 20px rgba(0,0,0,0.06);
+  --shadow-hover:0 12px 40px rgba(0,0,0,0.12);
+  --font:'Inter','Noto Sans SC',sans-serif;
+  --font-serif:'Noto Serif SC','Inter',serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+html{
+  scroll-behavior:smooth;
+  background:var(--bg);
+  font-family:var(--font);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+body{background:var(--bg);overflow-x:hidden}
+
+/* ============================================
+   GRAIN TEXTURE
+   ============================================ */
+body::after{
+  content:'';position:fixed;inset:0;z-index:999;pointer-events:none;opacity:0.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============================================
+   PASSWORD PAGE — 翻书封面
+   ============================================ */
+.password-overlay{
+  position:fixed;inset:0;z-index:10000;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  perspective:1200px;
+  transition:opacity 0.3s;
+}
+.password-overlay.flipping{
+  pointer-events:none;
+}
+
+/* 书页容器 */
+.password-page{
+  width:100%;height:100%;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  transform-origin:left center;
+  transform-style:preserve-3d;
+  transition:transform 1.1s cubic-bezier(0.22,0.61,0.36,1);
+  position:relative;
+  box-shadow:0 0 60px rgba(0,0,0,0);
+  transition:transform 1.1s cubic-bezier(0.22,0.61,0.36,1),
+             box-shadow 1.1s cubic-bezier(0.22,0.61,0.36,1);
+}
+.password-overlay.flipping .password-page{
+  transform:rotateY(-92deg) scale(0.97);
+  box-shadow:-30px 10px 80px rgba(0,0,0,0.18);
+}
+
+/* 翻页阴影渐变 */
+.password-page::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to right,
+    transparent 0%,
+    transparent 75%,
+    rgba(0,0,0,0.02) 85%,
+    rgba(0,0,0,0.08) 95%,
+    rgba(0,0,0,0.15) 100%);
+  opacity:0;transition:opacity 0.8s;
+  pointer-events:none;
+}
+.password-overlay.flipping .password-page::after{opacity:1}
+
+/* 翻页时背面露出 */
+.password-page::before{
+  content:'';position:absolute;inset:0;
+  background:var(--bg-card);
+  transform:rotateY(180deg);
+  backface-visibility:hidden;
+}
+
+/* 密码内容 */
+.password-inner{
+  text-align:center;padding:40px;
+  position:relative;z-index:1;
+}
+.password-inner .icon{
+  font-size:3rem;margin-bottom:20px;
+}
+.password-inner h2{
+  font-family:var(--font-serif);
+  font-size:clamp(1.2rem,2vw,1.6rem);
+  font-weight:500;color:var(--text);
+  margin-bottom:8px;
+}
+.password-inner .subtitle{
+  font-size:0.8rem;color:var(--text-dim);margin-bottom:32px;
+  letter-spacing:0.06em;
+}
+
+.password-input-wrap{
+  display:flex;align-items:center;gap:12px;
+  justify-content:center;
+}
+.password-input-wrap input{
+  border:1px solid var(--border);border-radius:6px;
+  padding:12px 18px;font-size:1rem;font-family:var(--font);
+  background:var(--bg-card);color:var(--text);
+  width:200px;text-align:center;letter-spacing:0.1em;
+  outline:none;transition:border-color 0.3s;
+}
+.password-input-wrap input:focus{border-color:var(--accent)}
+.password-input-wrap input.error{
+  border-color:var(--accent);
+  animation:shake 0.5s ease;
+}
+.password-input-wrap button{
+  background:var(--text);color:var(--bg-card);
+  border:none;border-radius:6px;padding:12px 20px;
+  font-size:0.85rem;font-family:var(--font);
+  cursor:pointer;letter-spacing:0.04em;
+  transition:background 0.3s,opacity 0.3s;
+}
+.password-input-wrap button:hover{opacity:0.85}
+
+.password-hint{
+  margin-top:20px;font-size:0.7rem;color:var(--text-faint);
+  letter-spacing:0.04em;
+}
+
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-6px)}
+  40%{transform:translateX(6px)}
+  60%{transform:translateX(-4px)}
+  80%{transform:translateX(4px)}
+}
+
+/* 翻页后渐隐 */
+.password-overlay.fade-out{
+  opacity:0;pointer-events:none;
+  transition:opacity 0.6s 0.8s;
+}
+
+/* ============================================
+   SCROLL PROGRESS
+   ============================================ */
+.progress{
+  position:fixed;top:0;left:0;height:2px;
+  background:var(--accent);z-index:100;
+  transition:width 0.2s;
+}
+
+/* ============================================
+   WATERMARK
+   ============================================ */
+.watermark{
+  position:fixed;top:20px;right:24px;z-index:98;
+  font-size:0.7rem;letter-spacing:0.08em;
+  color:rgba(0,0,0,0.12);
+  pointer-events:none;user-select:none;
+  font-family:var(--font-serif);
+}
+
+/* ============================================
+   MUSIC TOGGLE
+   ============================================ */
+.music-btn{
+  position:fixed;bottom:28px;right:28px;z-index:100;
+  width:42px;height:42px;border-radius:50%;
+  background:var(--bg-card);border:1px solid var(--border);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all 0.3s;color:var(--text-dim);box-shadow:var(--shadow-card);
+}
+.music-btn:hover{color:var(--accent);box-shadow:var(--shadow-hover)}
+.music-btn.muted{opacity:0.35}
+.music-btn svg{width:16px;height:16px;fill:currentColor}
+
+/* ============================================
+   HERO
+   ============================================ */
+.hero{
+  min-height:70vh;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:clamp(40px,10vh,120px) clamp(20px,5vw,60px);
+  position:relative;overflow:hidden;
+}
+/* 海报碎片装饰 */
+.hero::before{
+  content:'';
+  position:absolute;top:-60px;right:-40px;width:300px;height:400px;
+  background:url('posters/cmbyn.jpg') center/cover;
+  opacity:0.06;border-radius:4px;transform:rotate(8deg);
+  z-index:0;
+}
+.hero::after{
+  content:'';
+  position:absolute;bottom:-80px;left:-30px;width:260px;height:340px;
+  background:url('posters/the-handmaiden.jpg') center/cover;
+  opacity:0.04;border-radius:4px;transform:rotate(-5deg);
+  z-index:0;
+}
+.hero-content{position:relative;z-index:1}
+.hero h1{
+  font-size:clamp(2rem,5vw,3.5rem);
+  font-weight:200;letter-spacing:0.03em;
+  line-height:1.25;color:var(--text);
+}
+.hero h1 em{font-style:italic;font-weight:500}
+.hero .sub{
+  font-size:0.85rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--text-dim);margin-top:24px;font-weight:400;
+}
+.hero .scroll-tip{
+  margin-top:48px;font-size:0.7rem;letter-spacing:0.25em;
+  color:var(--text-faint);text-transform:uppercase;
+  animation:blink 2.5s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:0.4}50%{opacity:1}}
+
+/* ============================================
+   MOVIE ROW
+   ============================================ */
+.movie-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:70vh;
+  align-items:center;
+  padding:clamp(40px,8vh,100px) clamp(24px,6vw,100px);
+  max-width:1400px;margin:0 auto;
+  gap:clamp(40px,8vw,120px);
+  position:relative;
+}
+.movie-row.reverse{direction:rtl}
+.movie-row.reverse .movie-text{direction:ltr}
+
+/* 交错背景色 */
+.movie-row:nth-child(even){background:rgba(0,0,0,0.015)}
+
+/* ============================================
+   POSTER CARD
+   ============================================ */
+.poster-wrap{
+  position:relative;
+  opacity:0;transform:translateY(40px);
+  transition:all 0.8s var(--ease);
+}
+.poster-wrap.visible{opacity:1;transform:translateY(0)}
+
+.poster-card{
+  position:relative;z-index:2;
+  border-radius:6px;overflow:hidden;
+  box-shadow:var(--shadow-card);
+  transition:transform 0.5s var(--ease),box-shadow 0.5s var(--ease);
+  background:var(--bg-card);
+  cursor:pointer;
+}
+.poster-card:hover{
+  transform:translateY(-8px) rotate(-0.5deg);
+  box-shadow:var(--shadow-hover);
+}
+.poster-card img{
+  display:block;width:100%;height:auto;
+  transition:transform 0.6s var(--ease);
+}
+.poster-card:hover img{transform:scale(1.04)}
+
+/* 可切换海报标识 */
+.poster-switch{cursor:pointer;position:relative}
+.poster-switch::after{
+  content:'⇄';
+  position:absolute;bottom:8px;right:10px;z-index:5;
+  font-size:0.8rem;color:#fff;
+  background:rgba(0,0,0,0.4);border-radius:50%;
+  width:24px;height:24px;display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity 0.3s;
+}
+.poster-switch:hover::after{opacity:1}
+
+/* 海报后面装饰色块 */
+.poster-wrap::before{
+  content:'';position:absolute;
+  top:16px;left:-16px;width:100%;height:100%;
+  border-radius:6px;z-index:1;
+  background:var(--accent);opacity:0.06;
+  transition:all 0.5s var(--ease);
+}
+.poster-wrap:hover::before{opacity:0.12;top:20px;left:-20px}
+
+/* ============================================
+   TEXT SIDE
+   ============================================ */
+.movie-text{
+  opacity:0;transform:translateY(40px);
+  transition:all 0.8s 0.2s var(--ease);
+}
+.movie-text.visible{opacity:1;transform:translateY(0)}
+
+.movie-num{
+  font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--accent);font-weight:500;margin-bottom:12px;
+}
+.movie-title{
+  font-family:var(--font-serif);
+  font-size:clamp(1.6rem,3vw,2.4rem);
+  font-weight:600;line-height:1.2;margin-bottom:8px;
+}
+.movie-meta{
+  font-size:0.8rem;color:var(--text-dim);margin-bottom:28px;
+  letter-spacing:0.04em;
+}
+.review-toggle{
+  display:inline-block;
+  font-size:0.8rem;font-weight:500;letter-spacing:0.06em;
+  color:var(--accent);cursor:pointer;
+  border-bottom:1px solid transparent;
+  transition:border-color 0.3s;
+  user-select:none;
+}
+.review-toggle:hover{border-color:var(--accent)}
+.audio-hint{
+  display:inline-block;font-size:0.7rem;letter-spacing:0.04em;
+  color:var(--accent);opacity:0.6;
+  margin-left:6px;font-weight:400;
+}
+.review-toggle::after{
+  content:' ↓';font-size:0.7em;transition:transform 0.3s;
+  display:inline-block;
+}
+.review-toggle.open::after{transform:rotate(180deg)}
+
+.review-content{
+  overflow:hidden;max-height:0;
+  transition:max-height 0.6s var(--ease),margin 0.4s;
+  font-size:0.9rem;line-height:1.9;color:var(--text-dim);
+  margin-top:0;
+}
+.review-content.open{max-height:500px;margin-top:20px}
+.review-content p{margin-bottom:0.8em}
+.review-content em{color:var(--accent);font-style:italic}
+
+/* ============================================
+   FILM STRIP SECTION
+   ============================================ */
+.film-strip{
+  overflow:hidden;padding:60px 0;position:relative;
+  background:#fff;border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.film-strip-inner{
+  display:flex;gap:16px;animation:scrollStrip 40s linear infinite;
+  width:max-content;
+}
+.film-strip-inner img{
+  height:200px;width:auto;border-radius:4px;
+  opacity:0.6;transition:opacity 0.3s,transform 0.3s;
+  cursor:pointer;filter:grayscale(0.3);
+}
+.film-strip-inner img:hover{
+  opacity:1;transform:scale(1.05);filter:grayscale(0);
+}
+@keyframes scrollStrip{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+
+/* ============================================
+   ENVELOPE / LETTER
+   ============================================ */
+.letter-section{
+  display:flex;align-items:center;justify-content:center;
+  padding:clamp(40px,8vh,100px) 24px;
+  min-height:60vh;
+}
+.envelope{
+  position:relative;width:min(90vw,480px);
+  cursor:pointer;user-select:none;
+}
+.envelope-inner{
+  position:relative;
+  background:linear-gradient(135deg,#f5f0e8,#ede6d8);
+  border:2px solid #d4c9b0;
+  border-radius:4px;
+  padding:32px 28px 24px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.08);
+  overflow:hidden;
+  transition:all 0.5s var(--ease);
+}
+.envelope-inner::before{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:
+    linear-gradient(135deg,transparent 48%,rgba(180,160,120,0.15) 48%,rgba(180,160,120,0.15) 52%,transparent 52%),
+    linear-gradient(225deg,transparent 48%,rgba(180,160,120,0.1) 48%,rgba(180,160,120,0.1) 52%,transparent 52%);
+  pointer-events:none;opacity:0.5;
+}
+/* 封口火漆 */
+.envelope-seal{
+  position:absolute;top:-16px;left:50%;transform:translateX(-50%);
+  width:40px;height:40px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 2px 8px rgba(180,40,20,0.3);
+  z-index:2;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:0.6rem;font-weight:600;letter-spacing:0.04em;
+  transition:transform 0.4s var(--ease),opacity 0.4s;
+}
+.envelope.open .envelope-seal{transform:translateX(-50%) scale(0);opacity:0}
+
+.envelope-flap{
+  text-align:center;color:var(--text-dim);
+  font-size:0.9rem;letter-spacing:0.06em;
+  transition:opacity 0.4s;
+}
+.envelope.open .envelope-flap{opacity:0}
+.envelope-flap .hint{font-size:0.7rem;color:var(--text-faint);margin-top:6px}
+
+/* 信纸 */
+.letter-paper{
+  max-height:0;overflow:hidden;
+  transition:max-height 1s var(--ease),margin 0.6s;
+}
+.envelope.open .letter-paper{max-height:2000px;margin-top:20px}
+
+.letter-content{
+  font-family:var(--font-serif);
+  font-size:0.9rem;line-height:2;color:#3a3530;
+  padding:0 4px;
+}
+.letter-content .salutation{font-size:1.1rem;font-weight:500;margin-bottom:16px}
+.letter-content p{margin-bottom:1em;text-indent:2em}
+.letter-content .signature{text-align:right;margin-top:24px;font-style:italic;color:var(--accent)}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer{
+  text-align:center;padding:clamp(40px,8vh,100px) 24px;
+  opacity:0;transform:translateY(30px);
+  transition:all 1s var(--ease);
+}
+.footer.visible{opacity:1;transform:translateY(0)}
+.footer h2{
+  font-family:var(--font-serif);
+  font-size:clamp(1.5rem,3vw,2.2rem);
+  font-weight:500;line-height:1.4;
+}
+.footer .end{
+  font-size:0.85rem;color:var(--text-dim);
+  margin-top:16px;font-style:italic;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media(max-width:768px){
+  .movie-row,.movie-row.reverse{
+    grid-template-columns:1fr;gap:32px;min-height:auto;
+    direction:ltr;
+  }
+  .movie-row.reverse .movie-text{direction:ltr}
+  .cutout{display:none}
+  .poster-wrap::before{display:none}
+  .film-strip-inner img{height:120px}
+  .hero h1{font-size:1.6rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     PASSWORD OVERLAY
+     ============================================ -->
+<div class="password-overlay" id="pwOverlay">
+  <div class="password-page" id="pwPage">
+    <div class="password-inner">
+      <div class="icon">🎬</div>
+      <h2>Every frame is a moment<br>we breathed together</h2>
+      <p class="subtitle">我们一起看过多少部电影（剧）？</p>
+      <div class="password-input-wrap">
+        <input type="password" id="pwInput" placeholder="······" maxlength="10" autofocus>
+        <button id="pwBtn">↵</button>
+      </div>
+      <p class="password-hint">💡 提示：一个数字</p>
+    </div>
+  </div>
+</div>
+
+<div class="watermark">夏雨梓 × 马文泽熙</div>
+<div class="progress" id="progress"></div>
+
+<button class="music-btn" id="musicBtn" aria-label="音乐">
+  <svg id="iconOn" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+  <svg id="iconOff" viewBox="0 0 24 24" style="display:none"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+</button>
+
+<!-- ============================================
+     HERO
+     ============================================ -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Every frame<br><em>is a moment we breathed together</em></h1>
+    <p class="sub">A film diary with you</p>
+    <p class="scroll-tip">Scroll to explore</p>
+  </div>
+</section>
+
+<!-- ============================================
+     FILM STRIP
+     ============================================ -->
+<div class="film-strip">
+  <div class="film-strip-inner" id="filmStrip"></div>
+</div>
+
+<!-- ============================================
+     MOVIE ROWS
+     ============================================ -->
+<main id="movies">
+
+<!-- 01 电锯人 -->
+<article class="movie-row">
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card poster-switch" data-imgs="posters/chainsaw-man.jpg,posters/chainsaw-man-alt.jpg"><img src="posters/chainsaw-man.jpg" alt="电锯人" loading="lazy"></div>
+  </div>
+  <div class="movie-text" data-animate>
+    <div class="movie-num">01 · 第一部一起看的电影</div>
+    <h2 class="movie-title">电锯人—蕾赛篇</h2>
+    <p class="movie-meta">Chainsaw Man · Reze Arc <span class="audio-hint">🎵 专属配乐</span></p>
+    <span class="review-toggle" data-review="chainsaw-man">阅读评语</span>
+    <div class="review-content" id="review-chainsaw-man">
+      <p>其实按照时间来说，这才是我们一起看的第一部电影。</p>
+      <p>我没想到你会和我一起看，因为我只是上军事理论课很无聊而已。现在回想起来，当时在法新大类的时间真是过得很开心，现在发现也太晚了吧！！</p>
+    </div>
+  </div>
+</article>
+
+<!-- 02 疯狂动物城2 -->
+<article class="movie-row reverse">
+  <div class="movie-text" data-animate>
+    <div class="movie-num">02 · 寝室第一次集体出行</div>
+    <h2 class="movie-title">疯狂动物城 2</h2>
+    <p class="movie-meta">Zootopia 2</p>
+    <span class="review-toggle" data-review="zootopia-2">阅读评语</span>
+    <div class="review-content" id="review-zootopia-2">
+      <p>寝室一起出去看的第一部电影吧？</p>
+      <p>我记得当时你还发了朋友圈，但是我忘记了文案是不是 love you partner，我还在寻思这 partner 是谁……</p>
+    </div>
+  </div>
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card"><img src="posters/zootopia-2.jpg" alt="疯狂动物城2" loading="lazy"></div>
+  </div>
+</article>
+
+<!-- 03 夺命许愿 -->
+<article class="movie-row">
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card poster-switch" data-imgs="posters/the-wish.jpg,posters/the-wish-alt.jpg"><img src="posters/the-wish.jpg" alt="夺命许愿" loading="lazy"></div>
+  </div>
+  <div class="movie-text" data-animate>
+    <div class="movie-num">03 · 一起看完的第一部韩剧</div>
+    <h2 class="movie-title">夺命许愿</h2>
+    <p class="movie-meta">The Wish</p>
+    <span class="review-toggle" data-review="the-wish">阅读评语</span>
+    <div class="review-content" id="review-the-wish">
+      <p>我们一起看完的第一部韩剧，或者说，第一部剧！恭喜！撒花！🎉</p>
+      <p>棒子一直给我一种抄什么都抄不明白的感觉，剧情有些高开低走，但是总体还是给到一个顶级！Netflix 诚不欺我。</p>
+      <p>其实我很害怕自己推荐的电影或者剧不好看，带着你看电影的时候，我比导演和编剧更怕观众不喜欢。</p>
+    </div>
+  </div>
+</article>
+
+<!-- 04 墓地邂逅1 -->
+<article class="movie-row reverse">
+  <div class="movie-text" data-animate>
+    <div class="movie-num">04 · 伪纪录片神作</div>
+    <h2 class="movie-title">墓地邂逅 1</h2>
+    <p class="movie-meta">Grave Encounters · 2011</p>
+    <span class="review-toggle" data-review="grave-encounters-1">阅读评语</span>
+    <div class="review-content" id="review-grave-encounters-1">
+      <p>作为伪纪录片还是很不错，确实比昆池岩还好看。前半截没什么恐怖的点，但是后面的剧情直接拯救了这个系列，我记得你对这一部的评价也很高，我很喜欢男主说开场白，感觉很 hot blood！</p>
+    </div>
+  </div>
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card"><img src="posters/grave-encounters-1.jpg" alt="墓地邂逅1" loading="lazy"></div>
+  </div>
+</article>
+
+<!-- 05 后室 -->
+<article class="movie-row">
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card poster-switch" data-imgs="posters/backrooms.jpg,posters/backrooms-alt.jpg"><img src="posters/backrooms.jpg" alt="后室" loading="lazy"></div>
+  </div>
+  <div class="movie-text" data-animate>
+    <div class="movie-num">05 · 喜欢和你看恐怖片</div>
+    <h2 class="movie-title">后室</h2>
+    <p class="movie-meta">The Backrooms <span class="audio-hint">🎵 专属配乐</span></p>
+    <span class="review-toggle" data-review="backrooms">阅读评语</span>
+    <div class="review-content" id="review-backrooms">
+      <p>虽然剧情有些没交代清楚，但是整个氛围很棒！很后室！！而且！喜欢窝在你怀里，虽然在电影院亲亲我会很不好意思！</p>
+    </div>
+  </div>
+</article>
+
+<!-- 06 咒怨 -->
+<article class="movie-row reverse">
+  <div class="movie-text" data-animate>
+    <div class="movie-num">06 · 很典的日本鬼片</div>
+    <h2 class="movie-title">咒 怨</h2>
+    <p class="movie-meta">Ju-on · 2002 · 日本</p>
+    <span class="review-toggle" data-review="ju-on">阅读评语</span>
+    <div class="review-content" id="review-ju-on">
+      <p>呃啊！突脸还是很害怕，很典的日本鬼片！</p>
+      <p>我们还可以一起看《午夜凶铃》——我真的很想回顾一下！因为我上一次看是十五年前……</p>
+    </div>
+  </div>
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card"><img src="posters/ju-on.jpg" alt="咒怨" loading="lazy"></div>
+  </div>
+</article>
+
+<!-- 07 孤儿怨 -->
+<article class="movie-row">
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card"><img src="posters/orphan.jpg" alt="孤儿怨" loading="lazy"></div>
+  </div>
+  <div class="movie-text" data-animate>
+    <div class="movie-num">07 · 细节更耐看</div>
+    <h2 class="movie-title">孤儿怨</h2>
+    <p class="movie-meta">Orphan · 2009</p>
+    <span class="review-toggle" data-review="orphan">阅读评语</span>
+    <div class="review-content" id="review-orphan">
+      <p>小时候很多细节没品味出来，现在虽然觉得没有以前恐怖，但更能理解剧情和伏笔。</p>
+      <p>特别是关于看牙医那一段，结局很惊险，最后也收到了你的好评！</p>
+    </div>
+  </div>
+</article>
+
+<!-- 08 铁拳教育 -->
+<article class="movie-row reverse">
+  <div class="movie-text" data-animate>
+    <div class="movie-num">08 · 第二部一起看完的韩剧</div>
+    <h2 class="movie-title">铁拳教育</h2>
+    <p class="movie-meta">Iron Fist Education</p>
+    <span class="review-toggle" data-review="iron-fist-edu">阅读评语</span>
+    <div class="review-content" id="review-iron-fist-edu">
+      <p>铁拳是第二部我们一起看完的韩剧，而且是在期末周之前花了两三天就追完了。</p>
+      <p>这几天似乎过得特别幸福，因为总是有盼头——盼着能搬着小板凳坐在你旁边，也盼着能快点知道后面发生的故事，还盼着小胖快点和任晗琳在一起……</p>
+    </div>
+  </div>
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card poster-switch" data-imgs="posters/iron-fist-edu.jpg,posters/iron-fist-edu-alt.jpg"><img src="posters/iron-fist-edu.jpg" alt="铁拳教育" loading="lazy"></div>
+  </div>
+</article>
+
+<!-- 09 神秘录像带 -->
+<article class="movie-row">
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card poster-switch" data-imgs="posters/broadcast-signal.jpg,posters/broadcast-signal-alt.jpg"><img src="posters/broadcast-signal.jpg" alt="神秘录像带" loading="lazy"></div>
+  </div>
+  <div class="movie-text" data-animate>
+    <div class="movie-num">09 · 最喜欢的一部</div>
+    <h2 class="movie-title">寄给电视台的神秘录像带</h2>
+    <p class="movie-meta">Broadcast Signal Intrusion · 2021 <span class="audio-hint">🎵 专属配乐</span></p>
+    <span class="review-toggle" data-review="broadcast-signal">阅读评语</span>
+    <div class="review-content" id="review-broadcast-signal">
+      <p>算是我最喜欢的一部吧！里面的场景、声音、拍摄手法我都能给到一个夯！</p>
+      <p>所以——成为完整的人类吧！！</p>
+      <p>这也是寝室一起看的恐怖片！记得当时我们靠得很紧，每个人都看得很投入，这样的时刻再也不会有了吧。后来，这也是一个冠冕堂皇的理由让我们名正言顺睡在了一起。</p>
+    </div>
+  </div>
+</article>
+
+<!-- 10 墓地邂逅2 -->
+<article class="movie-row reverse">
+  <div class="movie-text" data-animate>
+    <div class="movie-num">10 · 完全没有烂尾的续集</div>
+    <h2 class="movie-title">墓地邂逅 2</h2>
+    <p class="movie-meta">Grave Encounters 2 · 2012</p>
+    <span class="review-toggle" data-review="grave-encounters-2">阅读评语</span>
+    <div class="review-content" id="review-grave-encounters-2">
+      <p>是我觉得完全没有烂尾的一部！</p>
+      <p>没想到能比 1 拍得更好，特别是延续了第一部的设定，包括男主和房子。嗯嗯😆</p>
+    </div>
+  </div>
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card"><img src="posters/grave-encounters-2.jpg" alt="墓地邂逅2" loading="lazy"></div>
+  </div>
+</article>
+
+<!-- 11 小姐 -->
+<article class="movie-row">
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card poster-switch" data-imgs="posters/the-handmaiden.jpg,posters/the-handmaiden-alt.jpg"><img src="posters/the-handmaiden.jpg" alt="小姐" loading="lazy"></div>
+  </div>
+  <div class="movie-text" data-animate>
+    <div class="movie-num">11 · 朴赞郁</div>
+    <h2 class="movie-title">小 姐</h2>
+    <p class="movie-meta">The Handmaiden · 2016</p>
+    <span class="review-toggle" data-review="the-handmaiden">阅读评语</span>
+    <div class="review-content" id="review-the-handmaiden">
+      <p>小时候看觉得剧情很好看，反转再反转。</p>
+      <p>脑子里一直有一个画面：小姐带着淑姬在山坡上奔跑，享无边的自由，和共同的呼吸。不过我一直以为这是电影最后一幕，再次观看才发现是记错了。</p>
+      <p>我不知道你那个问题——为什么要加入一个讨人厌的男主——解决了没有，但我记得那天晚上和你睡在一起，一直被摇摇晃晃的幸福裹挟着，很轻易地就堕入梦境。</p>
+    </div>
+  </div>
+</article>
+
+<!-- 12 Call Me by Your Name -->
+<article class="movie-row reverse">
+  <div class="movie-text" data-animate>
+    <div class="movie-num">12 · 意大利欠我一个柠檬味的夏天</div>
+    <h2 class="movie-title">Call Me by Your Name</h2>
+    <p class="movie-meta">Luca Guadagnino · 2017 <span class="audio-hint">🎵 专属配乐</span></p>
+    <span class="review-toggle" data-review="cmbyn">阅读评语</span>
+    <div class="review-content" id="review-cmbyn">
+      <p>我一直很喜欢的一部剧，虽然你给我拍照说你在看的时候，我没有第一时间认出来。</p>
+      <p>我初中的时候，因为没时间看电影，选择了看书，边看边用 mp3 听 <em>Mystery of Love</em>——意大利，你真是欠我一个柠檬味的夏天……</p>
+      <p>电影以前也是看得稀里糊涂，这次虽是断断续续看的，心境却完全不一样。</p>
+    </div>
+  </div>
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card poster-switch" data-imgs="posters/cmbyn.jpg,posters/cmbyn-alt.jpg"><img src="posters/cmbyn.jpg" alt="Call Me by Your Name" loading="lazy"></div>
+  </div>
+</article>
+
+<!-- 13 阿黛尔的生活 -->
+<article class="movie-row">
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card"><img src="posters/blue-warmest.jpg" alt="阿黛尔的生活" loading="lazy"></div>
+  </div>
+  <div class="movie-text" data-animate>
+    <div class="movie-num">13 · 蓝色是最温暖的颜色</div>
+    <h2 class="movie-title">阿黛尔的生活</h2>
+    <p class="movie-meta">Blue is the Warmest Colour · 2013</p>
+    <span class="review-toggle" data-review="blue-warmest">阅读评语</span>
+    <div class="review-content" id="review-blue-warmest">
+      <p>当年涉猎了不少 les 片，不过都是走马观花，这算是我印象里看得比较正式的。</p>
+      <p>这部电影的英文名叫 <em>Blue is the Warmest Colour</em>——蓝色是最温暖的颜色。也是我最喜欢的颜色。</p>
+      <p>因为剧情太现实，看的时候，不禁让人有些唏嘘，好奇着阿黛尔和艾玛的结局，同时我也在好奇着我们的结局……</p>
+    </div>
+  </div>
+</article>
+
+<!-- 14 花束般的恋爱 -->
+<article class="movie-row reverse">
+  <div class="movie-text" data-animate>
+    <div class="movie-num">14 · 日本物哀美学</div>
+    <h2 class="movie-title">花束般的恋爱</h2>
+    <p class="movie-meta">花束みたいな恋をした · 2021</p>
+    <span class="review-toggle" data-review="we-made-bouquet">阅读评语</span>
+    <div class="review-content" id="review-we-made-bouquet">
+      <p>再次看还是很有感触，这部电影给我的感觉和其他的都不一样。</p>
+      <p>也许是因为麦和绢一来一回的旁白颇有默契，也许是因为有个把日本物哀美学诠释得差不多的结局，也许是因为那么般配的两个人居然都走不到一起……这不禁让我们追问——到底要怎样般配的两个人才能走向理想的爱。</p>
+      <p>哦！还把小哭包看哭了来着，还想藏着掖着！萌萌萌 💕</p>
+    </div>
+  </div>
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card poster-switch" data-imgs="posters/we-made-bouquet.jpg,posters/we-made-bouquet-alt.jpg"><img src="posters/we-made-bouquet.jpg" alt="花束般的恋爱" loading="lazy"></div>
+  </div>
+</article>
+
+<!-- 15 穿普拉达的女王 -->
+<article class="movie-row">
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card"><img src="posters/devil-wears-prada.jpg" alt="穿普拉达的女王" loading="lazy"></div>
+  </div>
+  <div class="movie-text" data-animate>
+    <div class="movie-num">15 · 再看一次也不错</div>
+    <h2 class="movie-title">穿普拉达的女王</h2>
+    <p class="movie-meta">The Devil Wears Prada · 2006</p>
+    <span class="review-toggle" data-review="devil-wears-prada">阅读评语</span>
+    <div class="review-content" id="review-devil-wears-prada">
+      <p>好像没看到结局？或者我记忆不太深刻了。</p>
+      <p>我不介意再看一次。</p>
+    </div>
+  </div>
+</article>
+
+<!-- 16 铃芽之旅 -->
+<article class="movie-row reverse">
+  <div class="movie-text" data-animate>
+    <div class="movie-num">16 · 新海诚</div>
+    <h2 class="movie-title">铃芽之旅</h2>
+    <p class="movie-meta">すずめの戸締まり · 2022 <span class="audio-hint">🎵 专属配乐</span></p>
+    <span class="review-toggle" data-review="suzume">阅读评语</span>
+    <div class="review-content" id="review-suzume">
+      <p>没想到你也会喜欢这类！</p>
+      <p>新海诚虽然一直因为这一部电影被骂江郎才尽，但是我私自是很喜欢这一部的。铃芽和草太一起杀蚯厄的场景配上主题曲，总给我一种很神圣的感觉。小猫咪很萌 🐱</p>
+    </div>
+  </div>
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card"><img src="posters/suzume.jpg" alt="铃芽之旅" loading="lazy"></div>
+  </div>
+</article>
+
+</main>
+
+<!-- ============================================
+     LETTER
+     ============================================ -->
+<section class="letter-section" data-animate>
+  <div class="envelope" id="envelope">
+    <div class="envelope-inner">
+      <div class="envelope-seal">信</div>
+      <div class="envelope-flap">
+        💌<br><span class="hint">点击打开</span>
+      </div>
+      <div class="letter-paper">
+        <div class="letter-content">
+          <p class="salutation">亲爱的小宝宝：</p>
+          <p>真没想到这个学期，能和你看这么多电影（其实我还是感觉很少！没看够），我本身是一个很爱看电影的人，有时候现实中有很多很烦恼的事情，我就会选择看一部电影一部番来逃避一下（当然很多也是单纯因为喜欢或者无聊）。其实我也喜欢看的时候和身边的人偶尔聊聊天，好像我们漂浮在同一片海洋上，享受着同一片氧气，感受着同一片波浪。当阳光暖暖洋洋划过你我的手掌就像剧里的台词一样，这时，我感受到世界被排除在外，留下我们两个两耳不闻窗外事的“倒霉蛋”（只是为了押韵而已😉）</p>
+          <p>好吧回归正题，我做这个网页真是花了不少 token，不过应该可以永久保存了，以后看了更多的作品我会集中加入这个网页！把它做成我们一个专属的存档！嗯嗯嗯嗯嗯，好吧好吧好吧好吧好吧好吧这个暂时写到这里！</p>
+          <p class="signature">—— 你的小宝宝</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<section class="footer" data-animate>
+  <h2>To be continued<br><em>with you</em></h2>
+  <p class="end">未完待续，和你一起</p>
+</section>
+
+<!-- ============================================
+     SCRIPTS
+     ============================================ -->
+<script>
+(function(){
+'use strict';
+
+/* ===== PASSWORD ===== */
+const pwOverlay=document.getElementById('pwOverlay');
+const pwPage=document.getElementById('pwPage');
+const pwInput=document.getElementById('pwInput');
+const pwBtn=document.getElementById('pwBtn');
+
+function tryPassword(){
+  const val=pwInput.value.trim();
+  if(val==='17'){
+    // 密码正确 → 翻页动画
+    pwOverlay.classList.add('flipping');
+    // 翻页瞬间播 Bloody
+    audio.bg.play().catch(()=>{});
+    // 翻页完成后渐隐
+    setTimeout(()=>{
+      pwOverlay.classList.add('fade-out');
+      // 彻底移除
+      setTimeout(()=>{if(pwOverlay.parentNode)pwOverlay.remove();},1500);
+    },900);
+  }else{
+    pwInput.classList.add('error');
+    pwInput.value='';
+    setTimeout(()=>pwInput.classList.remove('error'),500);
+  }
+}
+
+pwBtn.addEventListener('click',tryPassword);
+pwInput.addEventListener('keydown',e=>{if(e.key==='Enter')tryPassword();});
+
+/* ===== PROGRESS BAR ===== */
+const progress=document.getElementById('progress');
+window.addEventListener('scroll',()=>{
+  const pct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100;
+  progress.style.width=(pct>0?pct:0)+'%';
+},{passive:true});
+
+/* ===== SCROLL ANIMATIONS ===== */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      // 如果滚到了新电影区域，且当前展开的不是这个电影 → 关闭配乐，切回 Bloody
+      const row=e.target.closest('.movie-row');
+      if(row&&audio.hasDedicated){
+        const toggleInRow=row.querySelector('.review-toggle.open');
+        if(!toggleInRow){
+          // 这个电影没被展开，但配乐还在播 → 关掉
+          document.querySelectorAll('.review-content.open').forEach(c=>c.classList.remove('open'));
+          document.querySelectorAll('.review-toggle.open').forEach(b=>b.classList.remove('open'));
+          audio.movieClose();
+        }
+      }
+    }
+  });
+},{threshold:0.4});
+document.querySelectorAll('[data-animate]').forEach(el=>observer.observe(el));
+// 也要观察 movie-row 本身
+document.querySelectorAll('.movie-row').forEach(el=>observer.observe(el));
+
+/* ===== REVIEW TOGGLE ===== */
+document.querySelectorAll('.review-toggle').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const id=btn.getAttribute('data-review');
+    const content=document.getElementById('review-'+id);
+    const isOpen=content.classList.contains('open');
+    // Close all others
+    document.querySelectorAll('.review-content.open').forEach(c=>c.classList.remove('open'));
+    document.querySelectorAll('.review-toggle.open').forEach(b=>b.classList.remove('open'));
+    if(!isOpen){
+      content.classList.add('open');
+      btn.classList.add('open');
+      audio.movieOpen(id);
+    }else{
+      audio.movieClose();
+    }
+  });
+});
+
+/* ===== FILM STRIP ===== */
+const filmStrip=document.getElementById('filmStrip');
+if(filmStrip){
+  const posters=['chainsaw-man','zootopia-2','the-wish','grave-encounters-1',
+    'backrooms','orphan','iron-fist-edu','broadcast-signal','grave-encounters-2',
+    'the-handmaiden','cmbyn','blue-warmest','we-made-bouquet','devil-wears-prada','suzume'];
+  const items=[...posters,...posters]; // Duplicate for seamless loop
+  items.forEach(p=>{
+    const img=document.createElement('img');
+    img.src='posters/'+p+'.jpg';
+    img.alt=p;
+    img.loading='lazy';
+    img.addEventListener('click',()=>{
+      const target=document.querySelector(`[data-review="${p}"]`);
+      if(target){target.scrollIntoView({behavior:'smooth'});target.click();}
+    });
+    filmStrip.appendChild(img);
+  });
+}
+
+/* ===== IMAGE SWITCHER（双图切换）===== */
+document.querySelectorAll('.poster-switch').forEach(card=>{
+  const imgs=card.getAttribute('data-imgs').split(',');
+  let idx=0;
+  card.addEventListener('click',function(e){
+    // 不在评语 toggle 的点击范围内才切换
+    if(e.target.closest('.review-toggle'))return;
+    e.stopPropagation();
+    idx=(idx+1)%imgs.length;
+    const img=card.querySelector('img');
+    img.style.opacity='0';
+    img.style.transition='opacity 0.3s';
+    setTimeout(()=>{img.src=imgs[idx];img.style.opacity='1';},300);
+  });
+});
+
+/* ===== 3D TILT ON POSTERS ===== */
+document.querySelectorAll('.poster-card').forEach(card=>{
+  card.addEventListener('mousemove',function(e){
+    const r=card.getBoundingClientRect();
+    const x=((e.clientX-r.left)/r.width-0.5)*2;
+    const y=((e.clientY-r.top)/r.height-0.5)*2;
+    card.style.transform=`translateY(-8px) rotate(${x*2}deg) perspective(600px) rotateY(${x*6}deg) rotateX(${-y*6}deg)`;
+    card.style.boxShadow='0 16px 48px rgba(0,0,0,0.15)';
+    card.style.transition='none';
+  });
+  card.addEventListener('mouseleave',function(){
+    card.style.transform='translateY(0) rotate(0deg)';
+    card.style.boxShadow='0 2px 20px rgba(0,0,0,0.06)';
+    card.style.transition='transform 0.5s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease';
+  });
+});
+
+/* ===== AUDIO ===== */
+const audio={
+  bg:null,theme:null,muted:false,
+  bgVol:0.7, themeVol:0.75, hasDedicated:false,
+
+  init(){
+    this.bg=new Audio('audio/bloody-mary-girl.mp4');
+    this.bg.loop=true;this.bg.volume=this.bgVol;
+    // 不自动播放，等密码正确后再播
+
+    this.theme=new Audio();this.theme.loop=true;this.theme.volume=0;
+
+    this.tracks={
+      'cmbyn':'audio/mystery-of-love.mp4',
+      'chainsaw-man':'audio/chainsaw-man-theme.mp4',
+      'backrooms':'audio/backrooms-theme.mp4',
+      'broadcast-signal':'audio/broadcast-signal-theme.mp4',
+      'suzume':'audio/suzume-theme.mp4',
+    };
+
+    this.bg.addEventListener('error',()=>console.warn('🔇 背景音乐加载失败'));
+  },
+
+  toggle(){
+    this.muted=!this.muted;
+    if(this.muted){this.bg.volume=0;this.theme.volume=0;}
+    else{this.bg.volume=this.hasDedicated?0:this.bgVol;this.theme.volume=this.hasDedicated?this.themeVol:0;}
+    return this.muted;
+  },
+
+  // 点开有配乐的电影 → Bloody 停掉，放专属配乐
+  movieOpen(id){
+    const k=Object.keys(this.tracks).find(k=>id===k||id.includes(k));
+    if(k&&this.tracks[k]){
+      this.hasDedicated=true;
+      this._fade(this.bg,0); // Bloody 停掉
+      this.theme.src=this.tracks[k];
+      this.theme.play().catch(()=>{});
+      this._fade(this.theme,this.muted?0:this.themeVol);
+    }else{
+      // 没配乐就继续放 Bloody
+      this.hasDedicated=false;
+    }
+  },
+
+  // 关闭电影 → 专属配乐停，Bloody 回来
+  movieClose(){
+    this.hasDedicated=false;
+    this._fade(this.bg,this.muted?0:this.bgVol);
+    this._fade(this.theme,0,true);
+  },
+
+  _fade(a,to,stop){
+    let v=a.volume,step=(to-v)/26,i=0;
+    const t=setInterval(()=>{
+      i++;a.volume=Math.max(0,Math.min(to,v+step*i));
+      if(i>=26){clearInterval(t);if(stop&&a.volume<=0.01){a.pause();a.currentTime=0;}}
+    },30);
+  }
+};
+
+/* ===== MUSIC BTN ===== */
+const musicBtn=document.getElementById('musicBtn');
+const iconOn=document.getElementById('iconOn');
+const iconOff=document.getElementById('iconOff');
+musicBtn.addEventListener('click',()=>{
+  const m=audio.toggle();
+  iconOn.style.display=m?'none':'block';
+  iconOff.style.display=m?'block':'none';
+  musicBtn.classList.toggle('muted',m);
+});
+
+/* ===== ENVELOPE ===== */
+const envelope=document.getElementById('envelope');
+if(envelope){
+  envelope.addEventListener('click',()=>{
+    const opening=!envelope.classList.contains('open');
+    envelope.classList.toggle('open');
+    if(opening){
+      // 打开信封 → 关闭所有电影评语 + 背景音乐恢复大声
+      document.querySelectorAll('.review-content.open').forEach(c=>c.classList.remove('open'));
+      document.querySelectorAll('.review-toggle.open').forEach(b=>b.classList.remove('open'));
+      audio.movieClose();
+    }
+  });
+}
+
+/* ===== INIT ===== */
+audio.init();
+})();
+</script>
+</body>
+</html>

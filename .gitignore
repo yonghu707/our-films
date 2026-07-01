@@ -1,0 +1,10 @@
+node_modules/
+package-lock.json
+package.json
+fetch-posters.js
+get-posters.html
+index-v1-backup.html
+*.ogg
+QmcWasm.wasm
+decrypt-mgg.js
+.DS_Store
