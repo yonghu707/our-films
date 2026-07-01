@@ -987,18 +987,19 @@ if(filmStrip){
 
 /* ===== IMAGE SWITCHER（双图切换）===== */
 document.querySelectorAll('.poster-switch').forEach(card=>{
-  const imgs=card.getAttribute('data-imgs').split(',');
+  const imgs=card.getAttribute('data-imgs').split(',').map(s=>s.trim());
   let idx=0;
+  const img=card.querySelector('img');
+  // 预加载第二张
+  const preload=new Image();preload.src=imgs[1];
   card.addEventListener('click',function(e){
-    // 不在评语 toggle 的点击范围内才切换
-    if(e.target.closest('.review-toggle'))return;
-    e.stopPropagation();
+    e.preventDefault();e.stopPropagation();
     idx=(idx+1)%imgs.length;
-    const img=card.querySelector('img');
     img.style.opacity='0';
-    img.style.transition='opacity 0.3s';
-    setTimeout(()=>{img.src=imgs[idx];img.style.opacity='1';},300);
+    setTimeout(()=>{img.src=imgs[idx];img.style.opacity='1';},250);
   });
+  // 初始 transition
+  img.style.transition='opacity 0.25s ease';
 });
 
 /* ===== 3D TILT ON POSTERS ===== */
