@@ -307,7 +307,11 @@ body::after{
 .poster-card img{
   display:block;width:100%;height:auto;
   transition:transform 0.6s var(--ease);
+  min-height:120px;
+  background:var(--bg-card);
+  color:transparent;
 }
+.poster-card img.error{object-fit:contain;padding:20%;opacity:0.5}
 .poster-card:hover img{transform:scale(1.04)}
 
 /* 可切换海报标识 */
@@ -1045,8 +1049,8 @@ function tryPassword(){
   if(val==='22'){
     // 密码正确 → 翻页动画
     pwOverlay.classList.add('flipping');
-    // 翻页瞬间播 Bloody
-    audio.bg.play().catch(()=>{});
+    // 翻页瞬间开始加载并播放 BGM
+    audio.playBg();
     // 翻页完成后渐隐
     setTimeout(()=>{
       pwOverlay.classList.add('fade-out');
@@ -1171,58 +1175,88 @@ document.querySelectorAll('.poster-card').forEach(card=>{
 const audio={
   bg:null,theme:null,muted:false,
   bgVol:0.7, themeVol:0.75, hasDedicated:false,
+  bgLoading:false, bgLoaded:false,
 
-  init(){
+  tracks:{
+    'cmbyn':'audio/mystery-of-love.mp4',
+    'chainsaw-man':'audio/chainsaw-man-theme.mp4',
+    'backrooms':'audio/backrooms-theme.mp4',
+    'broadcast-signal':'audio/broadcast-signal-theme.mp4',
+    'suzume':'audio/suzume-theme.mp4',
+    'secret':'audio/secret-theme.mp4',
+    'shan-cun-lao-shi':'audio/shan-cun-lao-shi-theme.mp4',
+  },
+
+  // 延迟加载背景音乐（密码正确后才调用，避免提前下载 33MB）
+  loadBg(){
+    if(this.bgLoaded||this.bgLoading) return;
+    this.bgLoading=true;
     this.bg=new Audio('audio/bgm.mp4');
     this.bg.loop=true;this.bg.volume=this.bgVol;
-    // 不自动播放，等密码正确后再播
+    this.bg.addEventListener('canplaythrough',()=>{
+      this.bgLoaded=true;this.bgLoading=false;
+    },{once:true});
+    this.bg.addEventListener('error',()=>{
+      console.warn('🔇 背景音乐加载失败');this.bgLoading=false;
+    });
+    // 开始加载
+    this.bg.load();
+  },
 
-    this.theme=new Audio();this.theme.loop=true;this.theme.volume=0;
-
-    this.tracks={
-      'cmbyn':'audio/mystery-of-love.mp4',
-      'chainsaw-man':'audio/chainsaw-man-theme.mp4',
-      'backrooms':'audio/backrooms-theme.mp4',
-      'broadcast-signal':'audio/broadcast-signal-theme.mp4',
-      'suzume':'audio/suzume-theme.mp4',
-      'secret':'audio/secret-theme.mp4',
-      'shan-cun-lao-shi':'audio/shan-cun-lao-shi-theme.mp4',
+  // 密码正确后调用 → 加载并播放 BGM
+  playBg(){
+    this.loadBg();
+    const tryPlay=()=>{
+      if(this.bgLoaded){
+        this.bg.play().catch(()=>{});
+      }else if(this.bgLoading){
+        // 还没加载完，等 canplay 事件
+        this.bg.addEventListener('canplaythrough',()=>{
+          this.bgLoaded=true;this.bgLoading=false;
+          this.bg.play().catch(()=>{});
+        },{once:true});
+      }else{
+        // 还没开始加载
+        this.loadBg();
+        setTimeout(()=>tryPlay(),500);
+      }
     };
-
-    this.bg.addEventListener('error',()=>console.warn('🔇 背景音乐加载失败'));
+    tryPlay();
   },
 
   toggle(){
     this.muted=!this.muted;
-    if(this.muted){this.bg.volume=0;this.theme.volume=0;}
-    else{this.bg.volume=this.hasDedicated?0:this.bgVol;this.theme.volume=this.hasDedicated?this.themeVol:0;}
+    if(this.bg){this.bg.volume=this.muted||this.hasDedicated?0:this.bgVol;}
+    if(this.theme)this.theme.volume=this.muted||!this.hasDedicated?0:this.themeVol;
     return this.muted;
   },
 
-  // 点开有配乐的电影 → Bloody 停掉，放专属配乐
+  // 点开有配乐的电影
   movieOpen(id){
     const k=Object.keys(this.tracks).find(k=>id===k||id.includes(k));
     if(k&&this.tracks[k]){
       this.hasDedicated=true;
-      this._fade(this.bg,0); // Bloody 停掉
+      if(this.bg) this._fade(this.bg,0);
+      // 按需创建 theme Audio
+      if(!this.theme) this.theme=new Audio();
       this.theme.src=this.tracks[k];
       this.theme.loop=k!=='broadcast-signal';
+      this.theme.load();
       this.theme.play().catch(()=>{});
       this._fade(this.theme,this.muted?0:this.themeVol);
     }else{
-      // 没配乐就继续放 Bloody
       this.hasDedicated=false;
     }
   },
 
-  // 关闭电影 → 专属配乐停，Bloody 回来
   movieClose(){
     this.hasDedicated=false;
-    this._fade(this.bg,this.muted?0:this.bgVol);
-    this._fade(this.theme,0,true);
+    if(this.bg) this._fade(this.bg,this.muted?0:this.bgVol);
+    if(this.theme) this._fade(this.theme,0,true);
   },
 
   _fade(a,to,stop){
+    if(!a) return;
     let v=a.volume,step=(to-v)/26,i=0;
     const t=setInterval(()=>{
       i++;a.volume=Math.max(0,Math.min(to,v+step*i));
@@ -1258,7 +1292,15 @@ if(envelope){
 }
 
 /* ===== INIT ===== */
-audio.init();
+// 音频延迟加载，不再在页面加载时预下载
+// audio.playBg() 会在密码正确后调用
+
+// 图片加载失败兜底
+document.addEventListener('error',e=>{
+  if(e.target.tagName==='IMG'){
+    e.target.classList.add('error');
+  }
+},true);
 })();
 </script>
 </body>
