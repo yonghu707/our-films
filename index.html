@@ -322,6 +322,28 @@ body::after{
 }
 .poster-switch:hover::after{opacity:1}
 
+/* 恐怖提示遮罩 */
+.scary-overlay{
+  position:absolute;inset:0;z-index:10;
+  background:rgba(255,255,255,0.92);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;border-radius:4px;cursor:default;
+  transition:opacity 0.4s;
+}
+.scary-overlay.hidden{opacity:0;pointer-events:none}
+.scary-overlay .scary-icon{font-size:2.2rem}
+.scary-overlay .scary-warn{
+  color:#d4542c;font-size:0.85rem;font-weight:600;
+  letter-spacing:0.06em;font-family:var(--font-serif);
+}
+.scary-overlay .scary-btn{
+  background:#d4542c;color:#fff;border:none;
+  padding:6px 24px;border-radius:4px;font-size:0.8rem;
+  cursor:pointer;letter-spacing:0.06em;
+  transition:background 0.3s;
+}
+.scary-overlay .scary-btn:hover{background:#b84322}
+
 /* 海报后面装饰色块 */
 .poster-wrap::before{
   content:'';position:absolute;
@@ -524,7 +546,7 @@ body::after{
         <input type="password" id="pwInput" placeholder="······" maxlength="10" autofocus>
         <button id="pwBtn">↵</button>
       </div>
-      <p class="password-hint">💡 提示：一个数字</p>
+      <p class="password-hint">💡 提示：一个数字（没看完的不算哦）</p>
     </div>
   </div>
 </div>
@@ -574,6 +596,7 @@ body::after{
 
 <!-- 01 电锯人 -->
 <article class="movie-row">
+  </div>
   <div class="poster-wrap" data-animate>
     <div class="poster-card poster-switch" data-imgs="posters/chainsaw-man.jpg,posters/chainsaw-man-alt.jpg"><img src="posters/chainsaw-man.jpg" alt="电锯人" loading="lazy"></div>
   </div>
@@ -583,14 +606,15 @@ body::after{
     <p class="movie-meta">Chainsaw Man · Reze Arc <span class="audio-hint">🎵 专属配乐</span></p>
     <span class="review-toggle" data-review="chainsaw-man">阅读评语</span>
     <div class="review-content" id="review-chainsaw-man">
-      <p>其实按照时间来说，这才是我们一起看的第一部电影。</p>
-      <p>我没想到你会和我一起看，因为我只是上军事理论课很无聊而已。现在回想起来，当时在法新大类的时间真是过得很开心，现在发现也太晚了吧！！</p>
+      <p>其实按照时间来说，这才是我们一起看的第一部电影。（居然是电锯人吗？）</p>
+      <p>我没想到你会和我一起看，我以为你会不感兴趣来着，因为我只是上军事理论课很无聊而已。没想到xyz给出来一个好评！让我猜猜，其实你已经完全忘记剧情了！</p>
+      <p>现在回想起来，当时在法新大类的时间真是过得很开心，现在发现也太晚了吧！！</p>
     </div>
   </div>
 </article>
 
 <!-- 02 疯狂动物城2 -->
-<article class="movie-row reverse">
+<article class="movie-row">
   <div class="movie-text" data-animate>
     <div class="movie-num">02 · 寝室第一次集体出行</div>
     <h2 class="movie-title">疯狂动物城 2</h2>
@@ -598,8 +622,9 @@ body::after{
     <span class="review-toggle" data-review="zootopia-2">阅读评语</span>
     <div class="review-content" id="review-zootopia-2">
       <p>寝室一起出去看的第一部电影吧？</p>
-      <p>我记得当时你还发了朋友圈，但是我忘记了文案是不是 love you partner，我还在寻思这 partner 是谁……</p>
+      <p>我记得当时你还发了朋友圈，但是我忘记了文案是不是 love you partner，我还在寻思这 partner 是谁……我以为是你心里有一个念念不忘的神秘人。。</p>
     </div>
+  </div>
   </div>
   <div class="poster-wrap" data-animate>
     <div class="poster-card"><img src="posters/zootopia-2.jpg" alt="疯狂动物城2" loading="lazy"></div>
@@ -608,6 +633,7 @@ body::after{
 
 <!-- 03 夺命许愿 -->
 <article class="movie-row">
+  </div>
   <div class="poster-wrap" data-animate>
     <div class="poster-card poster-switch" data-imgs="posters/the-wish.jpg,posters/the-wish-alt.jpg"><img src="posters/the-wish.jpg" alt="夺命许愿" loading="lazy"></div>
   </div>
@@ -618,22 +644,23 @@ body::after{
     <span class="review-toggle" data-review="the-wish">阅读评语</span>
     <div class="review-content" id="review-the-wish">
       <p>我们一起看完的第一部韩剧，或者说，第一部剧！恭喜！撒花！🎉</p>
-      <p>棒子一直给我一种抄什么都抄不明白的感觉，剧情有些高开低走，但是总体还是给到一个顶级！Netflix 诚不欺我。</p>
-      <p>其实我很害怕自己推荐的电影或者剧不好看，带着你看电影的时候，我比导演和编剧更怕观众不喜欢。</p>
+      <p>虽然棒子一直给我一种抄什么都抄不明白的感觉，剧情有些高开低走，但是总体还是给到一个顶级！Netflix 诚不欺我。</p>
+      <p>当时这是我强推的，我很害怕自己推荐的电影或者剧不好看，带着你看电影的时候，我比导演和编剧更怕观众不喜欢呢！</p>
     </div>
   </div>
 </article>
 
 <!-- 04 墓地邂逅1 -->
-<article class="movie-row reverse">
+<article class="movie-row">
   <div class="movie-text" data-animate>
     <div class="movie-num">04 · 伪纪录片神作</div>
     <h2 class="movie-title">墓地邂逅 1</h2>
     <p class="movie-meta">Grave Encounters · 2011</p>
     <span class="review-toggle" data-review="grave-encounters-1">阅读评语</span>
     <div class="review-content" id="review-grave-encounters-1">
-      <p>作为伪纪录片还是很不错，确实比昆池岩还好看。前半截没什么恐怖的点，但是后面的剧情直接拯救了这个系列，我记得你对这一部的评价也很高，我很喜欢男主说开场白，感觉很 hot blood！</p>
+      <p>作为伪纪录片还是很不错，确实比昆池岩还好看。前半截没什么恐怖的点，但是后面的剧情直接拯救了这个系列，我记得你对这一部的评价也很高，我们都很喜欢男主说开场白，感觉很 hot blood！</p>
     </div>
+  </div>
   </div>
   <div class="poster-wrap" data-animate>
     <div class="poster-card poster-switch" data-imgs="posters/grave-encounters-1.jpg,posters/grave-encounters-1-alt.jpg"><img src="posters/grave-encounters-1.jpg" alt="墓地邂逅1" loading="lazy"></div>
@@ -642,6 +669,7 @@ body::after{
 
 <!-- 05 后室 -->
 <article class="movie-row">
+  </div>
   <div class="poster-wrap" data-animate>
     <div class="poster-card poster-switch" data-imgs="posters/backrooms.jpg,posters/backrooms-alt.jpg"><img src="posters/backrooms.jpg" alt="后室" loading="lazy"></div>
   </div>
@@ -651,30 +679,32 @@ body::after{
     <p class="movie-meta">The Backrooms <span class="audio-hint">🎵 专属配乐</span></p>
     <span class="review-toggle" data-review="backrooms">阅读评语</span>
     <div class="review-content" id="review-backrooms">
-      <p>虽然剧情有些没交代清楚，但是整个氛围很棒！很后室！！而且！喜欢窝在你怀里，虽然在电影院亲亲我会很不好意思！</p>
+      <p>虽然剧情有些没交代清楚，但是整个氛围很棒！很后室！！而且！喜欢窝在你怀里看电影！感觉很好，虽然在电影院亲亲我会很不好意思！</p>
     </div>
   </div>
 </article>
 
 <!-- 06 咒怨 -->
-<article class="movie-row reverse">
+<article class="movie-row">
   <div class="movie-text" data-animate>
     <div class="movie-num">06 · 很典的日本鬼片</div>
     <h2 class="movie-title">咒 怨</h2>
     <p class="movie-meta">Ju-on · 2002 · 日本</p>
     <span class="review-toggle" data-review="ju-on">阅读评语</span>
     <div class="review-content" id="review-ju-on">
-      <p>呃啊！突脸还是很害怕，很典的日本鬼片！</p>
+      <p>呃啊！突脸还是很害怕，很典的日本鬼片！好邪啊！</p>
       <p>我们还可以一起看《午夜凶铃》——我真的很想回顾一下！因为我上一次看是十五年前……</p>
     </div>
   </div>
+  </div>
   <div class="poster-wrap" data-animate>
-    <div class="poster-card"><img src="posters/ju-on.jpg" alt="咒怨" loading="lazy"></div>
+    <div class="poster-card" style="position:relative"><img src="posters/ju-on.jpg" alt="咒怨" loading="lazy"><div class="scary-overlay" id="scaryJuon"><span class="scary-icon">🐱</span><span class="scary-warn">微恐提醒</span><button class="scary-btn" onclick="document.getElementById('scaryJuon').classList.add('hidden')">确 定</button></div></div>
   </div>
 </article>
 
 <!-- 07 孤儿怨 -->
 <article class="movie-row">
+  </div>
   <div class="poster-wrap" data-animate>
     <div class="poster-card"><img src="posters/orphan.jpg" alt="孤儿怨" loading="lazy"></div>
   </div>
@@ -685,13 +715,13 @@ body::after{
     <span class="review-toggle" data-review="orphan">阅读评语</span>
     <div class="review-content" id="review-orphan">
       <p>小时候很多细节没品味出来，现在虽然觉得没有以前恐怖，但更能理解剧情和伏笔。</p>
-      <p>特别是关于看牙医那一段，结局很惊险，最后也收到了你的好评！</p>
+      <p>特别是关于看牙医那一段，结局很惊险！蒽！你对这一部的评价也很高来着</p>
     </div>
   </div>
 </article>
 
 <!-- 08 铁拳教育 -->
-<article class="movie-row reverse">
+<article class="movie-row">
   <div class="movie-text" data-animate>
     <div class="movie-num">08 · 第二部一起看完的韩剧</div>
     <h2 class="movie-title">铁拳教育</h2>
@@ -702,6 +732,7 @@ body::after{
       <p>这几天似乎过得特别幸福，因为总是有盼头——盼着能搬着小板凳坐在你旁边，也盼着能快点知道后面发生的故事，还盼着小胖快点和任晗琳在一起……</p>
     </div>
   </div>
+  </div>
   <div class="poster-wrap" data-animate>
     <div class="poster-card poster-switch" data-imgs="posters/iron-fist-edu.jpg,posters/iron-fist-edu-alt.jpg"><img src="posters/iron-fist-edu.jpg" alt="铁拳教育" loading="lazy"></div>
   </div>
@@ -709,6 +740,7 @@ body::after{
 
 <!-- 09 神秘录像带 -->
 <article class="movie-row">
+  </div>
   <div class="poster-wrap" data-animate>
     <div class="poster-card poster-switch" data-imgs="posters/broadcast-signal.jpg,posters/broadcast-signal-alt.jpg"><img src="posters/broadcast-signal.jpg" alt="神秘录像带" loading="lazy"></div>
   </div>
@@ -718,52 +750,90 @@ body::after{
     <p class="movie-meta">Broadcast Signal Intrusion · 2021 <span class="audio-hint">🎵 专属配乐</span></p>
     <span class="review-toggle" data-review="broadcast-signal">阅读评语</span>
     <div class="review-content" id="review-broadcast-signal">
-      <p>算是我最喜欢的一部吧！里面的场景、声音、拍摄手法我都能给到一个夯！</p>
+      <p>是这个系列里面我最喜欢的一部！里面的场景、声音、拍摄手法我都能给到一个夯！</p>
       <p>所以——成为完整的人类吧！！</p>
       <p>这也是寝室一起看的恐怖片！记得当时我们靠得很紧，每个人都看得很投入，这样的时刻再也不会有了吧。后来，这也是一个冠冕堂皇的理由让我们名正言顺睡在了一起。</p>
     </div>
   </div>
 </article>
 
-<!-- 10 墓地邂逅2 -->
-<article class="movie-row reverse">
+	<!-- 10 向饭沼一家谢罪 -->
+	<article class="movie-row">
+	  <div class="movie-text" data-animate>
+	    <div class="movie-num">10 · 心理恐怖佳作</div>
+	    <h2 class="movie-title">向饭沼一家谢罪</h2>
+	    <p class="movie-meta">The Inerasable</p>
+	    <span class="review-toggle" data-review="inaga-apology">阅读评语</span>
+	    <div class="review-content" id="review-inaga-apology">
+	      <p>这是我们分了两次看完的，前半截感觉你好像不是很感兴趣呢，其实我觉得还是很有意思！有种沉浸式调查的感觉呢</p>
+		      <p>然后后半截是我们吵了架之后一起下床看掉的！吵架的焦点是我为什么没有立马解释，好吧我争取下一次记住。，呃啊！我又哭了！</p>
+		      <p>我恨你🥸</p>
+		      <p>回来，电影看得还是有点毛骨悚然，有点心理恐怖来着，我感觉可以排到神秘录像带的后一名！</p>
+	    </div>
+	  </div>
+	  <div class="poster-wrap" data-animate>
+	    <div class="poster-card poster-switch" data-imgs="posters/inaga-apology-alt.jpg,posters/inaga-apology.jpg"><img src="posters/inaga-apology.jpg" alt="向饭沼一家谢罪" loading="lazy"></div>
+	  </div>
+	</article>
+
+	<!-- 11 墓地邂逅2 -->
+	<article class="movie-row">
   <div class="movie-text" data-animate>
-    <div class="movie-num">10 · 完全没有烂尾的续集</div>
+    <div class="movie-num">11 · 完全没有烂尾的续集</div>
     <h2 class="movie-title">墓地邂逅 2</h2>
     <p class="movie-meta">Grave Encounters 2 · 2012</p>
     <span class="review-toggle" data-review="grave-encounters-2">阅读评语</span>
     <div class="review-content" id="review-grave-encounters-2">
       <p>是我觉得完全没有烂尾的一部！</p>
-      <p>没想到能比 1 拍得更好，特别是延续了第一部的设定，包括男主和房子。嗯嗯😆</p>
+      <p>没想到能比 1 拍得更好，特别是延续了第一部的设定，包括男主和房子。在床上第一次都看睡着了，但是还好我们坚持看下去了！不然又错过一部很经典的了！</p>
     </div>
+  </div>
   </div>
   <div class="poster-wrap" data-animate>
     <div class="poster-card"><img src="posters/grave-encounters-2.jpg" alt="墓地邂逅2" loading="lazy"></div>
   </div>
 </article>
 
-<!-- 11 小姐 -->
+<!-- 12 山村老尸 -->
 <article class="movie-row">
+  </div>
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card"><img src="posters/shan-cun-lao-shi.jpg" alt="山村老尸" loading="lazy"></div>
+  </div>
+  <div class="movie-text" data-animate>
+    <div class="movie-num">12 · 欢迎来到我们大成都</div>
+    <h2 class="movie-title">山村老尸</h2>
+    <p class="movie-meta">The Wicked Ghost · 1999 · 香港 <span class="audio-hint">🎵 专属配乐</span></p>
+    <span class="review-toggle" data-review="shan-cun-lao-shi">阅读评语</span>
+    <div class="review-content" id="review-shan-cun-lao-shi">
+      <p>欢迎来到我们大成都！欢迎回家！</p>
+      <p>虽然没看完，有点过于老了？吓人的把戏有些陈旧，但是很经典啊喂！我后面要自己去补完，切！看完，然后睡觉，离你远远的！虽然你说我头靠着你很舒服！但是你也没有一点主动，我生气了😠，成都你为什么这么美好！</p>
+    </div>
+  </div>
+</article>
+
+<!-- 13 小姐 -->
+	<article class="movie-row">
+  </div>
   <div class="poster-wrap" data-animate>
     <div class="poster-card poster-switch" data-imgs="posters/the-handmaiden.jpg,posters/the-handmaiden-alt.jpg"><img src="posters/the-handmaiden.jpg" alt="小姐" loading="lazy"></div>
   </div>
   <div class="movie-text" data-animate>
-    <div class="movie-num">11 · 朴赞郁</div>
+    <div class="movie-num">13 · 朴赞郁</div>
     <h2 class="movie-title">小 姐</h2>
     <p class="movie-meta">The Handmaiden · 2016</p>
     <span class="review-toggle" data-review="the-handmaiden">阅读评语</span>
     <div class="review-content" id="review-the-handmaiden">
       <p>小时候看觉得剧情很好看，反转再反转。</p>
-      <p>脑子里一直有一个画面：小姐带着淑姬在山坡上奔跑，享无边的自由，和共同的呼吸。不过我一直以为这是电影最后一幕，再次观看才发现是记错了。</p>
-      <p>我不知道你那个问题——为什么要加入一个讨人厌的男主——解决了没有，但我记得那天晚上和你睡在一起，一直被摇摇晃晃的幸福裹挟着，很轻易地就堕入梦境。</p>
+      <p>脑子里一直有一个画面：小姐带着淑姬在山坡上奔跑，享无边的自由和共同的呼吸。不过我一直以为这是电影最后一幕，再次观看才发现是记错了。我不知道你那个问题——为什么要加入一个讨人厌的男主——解决了没有，但我记得那天晚上和你睡在一起，一直被摇摇晃晃的幸福裹挟着，很轻易地就堕入梦境。</p>
     </div>
   </div>
 </article>
 
-<!-- 12 Call Me by Your Name -->
-<article class="movie-row reverse">
+<!-- 14 Call Me by Your Name -->
+	<article class="movie-row">
   <div class="movie-text" data-animate>
-    <div class="movie-num">12 · 意大利欠我一个柠檬味的夏天</div>
+    <div class="movie-num">14 · 意大利欠我一个柠檬味的夏天</div>
     <h2 class="movie-title">Call Me by Your Name</h2>
     <p class="movie-meta">Luca Guadagnino · 2017 <span class="audio-hint">🎵 专属配乐</span></p>
     <span class="review-toggle" data-review="cmbyn">阅读评语</span>
@@ -773,78 +843,154 @@ body::after{
       <p>电影以前也是看得稀里糊涂，这次虽是断断续续看的，心境却完全不一样。</p>
     </div>
   </div>
+  </div>
   <div class="poster-wrap" data-animate>
     <div class="poster-card poster-switch" data-imgs="posters/cmbyn.jpg,posters/cmbyn-alt.jpg"><img src="posters/cmbyn.jpg" alt="Call Me by Your Name" loading="lazy"></div>
   </div>
 </article>
 
-<!-- 13 阿黛尔的生活 -->
-<article class="movie-row">
+<!-- 15 阿黛尔的生活 -->
+	<article class="movie-row">
+  </div>
   <div class="poster-wrap" data-animate>
     <div class="poster-card"><img src="posters/blue-warmest.jpg" alt="阿黛尔的生活" loading="lazy"></div>
   </div>
   <div class="movie-text" data-animate>
-    <div class="movie-num">13 · 蓝色是最温暖的颜色</div>
+    <div class="movie-num">15 · 蓝色是最温暖的颜色</div>
     <h2 class="movie-title">阿黛尔的生活</h2>
     <p class="movie-meta">Blue is the Warmest Colour · 2013</p>
     <span class="review-toggle" data-review="blue-warmest">阅读评语</span>
     <div class="review-content" id="review-blue-warmest">
       <p>当年涉猎了不少 les 片，不过都是走马观花，这算是我印象里看得比较正式的。</p>
-      <p>这部电影的英文名叫 <em>Blue is the Warmest Colour</em>——蓝色是最温暖的颜色。也是我最喜欢的颜色。</p>
+      <p>这部电影的英文名叫 <em>Blue is the Warmest Colour</em>——蓝色是最温暖的颜色。也是我们都最喜欢的颜色。</p>
       <p>因为剧情太现实，看的时候，不禁让人有些唏嘘，好奇着阿黛尔和艾玛的结局，同时我也在好奇着我们的结局……</p>
     </div>
   </div>
 </article>
 
-<!-- 14 花束般的恋爱 -->
-<article class="movie-row reverse">
+<!-- 16 花束般的恋爱 -->
+	<article class="movie-row">
   <div class="movie-text" data-animate>
-    <div class="movie-num">14 · 日本物哀美学</div>
+    <div class="movie-num">16 · 日本物哀美学</div>
     <h2 class="movie-title">花束般的恋爱</h2>
     <p class="movie-meta">花束みたいな恋をした · 2021</p>
     <span class="review-toggle" data-review="we-made-bouquet">阅读评语</span>
     <div class="review-content" id="review-we-made-bouquet">
       <p>再次看还是很有感触，这部电影给我的感觉和其他的都不一样。</p>
       <p>也许是因为麦和绢一来一回的旁白颇有默契，也许是因为有个把日本物哀美学诠释得差不多的结局，也许是因为那么般配的两个人居然都走不到一起……这不禁让我们追问——到底要怎样般配的两个人才能走向理想的爱。</p>
-      <p>哦！还把小哭包看哭了来着，还想藏着掖着！萌萌萌 💕</p>
+      <p>哦！还把小哭包看哭了来着，还想藏着掖着！萌萌萌 💕后来那个无意义100问，你也说这是让你感触很深的一部电影！</p>
     </div>
   </div>
+  </div>
   <div class="poster-wrap" data-animate>
-    <div class="poster-card poster-switch" data-imgs="posters/we-made-bouquet.jpg,posters/we-made-bouquet-alt.jpg"><img src="posters/we-made-bouquet.jpg" alt="花束般的恋爱" loading="lazy"></div>
+    <div class="poster-card poster-switch" data-imgs="posters/we-made-bouquet-alt.jpg,posters/we-made-bouquet.jpg"><img src="posters/we-made-bouquet-alt.jpg" alt="花束般的恋爱" loading="lazy"></div>
   </div>
 </article>
 
-<!-- 15 穿普拉达的女王 -->
-<article class="movie-row">
+<!-- 17 穿普拉达的女王 -->
+	<article class="movie-row">
   <div class="poster-wrap" data-animate>
     <div class="poster-card"><img src="posters/devil-wears-prada.jpg" alt="穿普拉达的女王" loading="lazy"></div>
   </div>
   <div class="movie-text" data-animate>
-    <div class="movie-num">15 · 再看一次也不错</div>
+    <div class="movie-num">17 · 再看一次也不错</div>
     <h2 class="movie-title">穿普拉达的女王</h2>
     <p class="movie-meta">The Devil Wears Prada · 2006</p>
     <span class="review-toggle" data-review="devil-wears-prada">阅读评语</span>
     <div class="review-content" id="review-devil-wears-prada">
-      <p>好像没看到结局？或者我记忆不太深刻了。</p>
-      <p>我不介意再看一次。</p>
+		      <p>当时上课看的吧！好像没看到结局？或者我记忆不太深刻了。我不介意再看一次。</p>
     </div>
   </div>
 </article>
 
-<!-- 16 铃芽之旅 -->
-<article class="movie-row reverse">
+<!-- 18 铃芽之旅 -->
+	<article class="movie-row">
   <div class="movie-text" data-animate>
-    <div class="movie-num">16 · 新海诚</div>
+    <div class="movie-num">18 · 新海诚</div>
     <h2 class="movie-title">铃芽之旅</h2>
     <p class="movie-meta">すずめの戸締まり · 2022 <span class="audio-hint">🎵 专属配乐</span></p>
     <span class="review-toggle" data-review="suzume">阅读评语</span>
     <div class="review-content" id="review-suzume">
       <p>没想到你也会喜欢这类！</p>
-      <p>新海诚虽然一直因为这一部电影被骂江郎才尽，但是我私自是很喜欢这一部的。铃芽和草太一起杀蚯厄的场景配上主题曲，总给我一种很神圣的感觉。小猫咪很萌 🐱</p>
-    </div>
+	      <p>新海诚虽然一直因为这一部电影被骂江郎才尽，但是我私自是很喜欢这一部的。铃芽和草太一起杀蚯厄的场景配上主题曲，总给我一种很神圣的感觉，"没有草太先生的世界简直太可怕了！"好中二的台词（吐槽一下：感情线略显单薄）。不过小猫咪很萌 🐱</p>
+  </div>
   </div>
   <div class="poster-wrap" data-animate>
     <div class="poster-card poster-switch" data-imgs="posters/suzume.jpg,posters/suzume-alt.jpg"><img src="posters/suzume.jpg" alt="铃芽之旅" loading="lazy"></div>
+  </div>
+</article>
+
+	<!-- 19 寻找石永菊江 -->
+	<article class="movie-row">
+	  <div class="movie-text" data-animate>
+	    <div class="movie-num">19 · 伪纪录片新尝试</div>
+	    <h2 class="movie-title">寻找石永菊江</h2>
+	    <p class="movie-meta">Looking for Ishiei Kikue</p>
+	    <span class="review-toggle" data-review="ishiei-kikue">阅读评语</span>
+	    <div class="review-content" id="review-ishiei-kikue">
+	      <p>整体来讲我觉得没有向饭沼一家谢罪好看，不过这个电视节目的形式还是很新颖！给这个系列打个分！</p>
+	      <p>综合评分：《录像带》＞《饭沼》＞《石永》<br>
+	      情感共鸣：《饭沼》＞《录像带》＝《石永》<br>
+	      剧情：《饭沼》＞《录像带》＞《石永》</p>
+	      <p>寻找石永菊江：在饭沼之后，我们"拜访了"石永小姐，open ending决定了这部电影的可分析性很强，整体来说，我还是更喜欢饭沼一家！不过这个恐怖气氛做的很不错，记得那天我早起去上课，你说你满脑子都是那个邪门的照片。有次俺大早上去取麦当劳也是，挥之不去，臭石永菊江。。。。看了很多结局分析，我还是倾向于老男的想要复活爱人，但是仪式失败了，石永附身到不同女孩身上，只能杀死他们，我觉得还挺浪漫的，呃啊，现在看到这个海报心里还是麻麻的。。。</p>
+	  </div>
+  </div>
+	  <div class="poster-wrap" data-animate>
+	    <div class="poster-card poster-switch" data-imgs="posters/ishiei-kikue.jpg,posters/ishiei-kikue-alt.jpg"><img src="posters/ishiei-kikue.jpg" alt="寻找石永菊江" loading="lazy"></div>
+	  </div>
+	</article>
+
+<!-- 20 恐怖游轮 -->
+<article class="movie-row">
+  </div>
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card poster-switch" data-imgs="posters/triangle.jpg,posters/triangle-alt.jpg"><img src="posters/triangle.jpg" alt="恐怖游轮" loading="lazy"></div>
+  </div>
+  <div class="movie-text" data-animate>
+    <div class="movie-num">20 · 莫比乌斯环</div>
+    <h2 class="movie-title">恐怖游轮</h2>
+    <p class="movie-meta">Triangle · 2009</p>
+    <span class="review-toggle" data-review="triangle">阅读评语</span>
+    <div class="review-content" id="review-triangle">
+      <p>小宝宝好棒！在最开始就猜对了很多剧情！当时你说出来的时候我心头一怔。。。我说oh no！怎么还有自己给自己剧透的！但是导演还是更胜一筹，把整个剧情安排的很完美。在我心中似乎整部电影是一个莫比乌斯环，我很难想明白整个循环呢，什么平行宇宙什么循环，什么乱七八糟的。看到很多个濒死的红毛女配的时候还是很震撼，小时候就被震撼了一次，现在还是很震撼！</p>
+      <p>震撼来袭！而且还是很多年前的老电影，导演牛逼！</p>
+    </div>
+  </div>
+</article>
+
+<!-- 21 不能说的秘密 -->
+<article class="movie-row">
+  <div class="movie-text" data-animate>
+    <div class="movie-num">21 · 無隅102</div>
+    <h2 class="movie-title">不能说的秘密</h2>
+    <p class="movie-meta">Secret · 2007 · 周杰伦 <span class="audio-hint">🎵 专属配乐</span></p>
+    <span class="review-toggle" data-review="secret">阅读评语</span>
+    <div class="review-content" id="review-secret">
+      <p>第一次看，发现是周杰伦演的，感觉很奇怪呢，他不是个唱歌的蛮。。。其实演的还是不错，还有很多很搞笑的部分和一些金句。。。呃呃呃，"是腻害。。"呃呃呃，台湾人说话咋这样！</p>
+      <p>蒽！结局是he哎，都忘记结局了，就记得爸爸救火去了，再看一次发现爸爸的人格魅力真的很大！</p>
+      <p>第二次是和我小宝宝看的，很开心！在無隅102，很高大的落地窗和绿油油的外景，还有我香喷喷的小宝宝，好幸福的感觉🥰</p>
+    </div>
+  </div>
+  </div>
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card poster-switch" data-imgs="posters/secret.jpg,posters/secret-alt.jpg"><img src="posters/secret.jpg" alt="不能说的秘密" loading="lazy"></div>
+  </div>
+</article>
+
+<!-- 22 aptv -->
+<article class="movie-row">
+  </div>
+  <div class="poster-wrap" data-animate>
+    <div class="poster-card poster-switch" data-imgs="posters/aptv.jpg,posters/aptv-alt.jpg"><img src="posters/aptv.jpg" alt="aptv" loading="lazy"></div>
+  </div>
+  <div class="movie-text" data-animate>
+    <div class="movie-num">22 · 下饭神剧</div>
+    <h2 class="movie-title">aptv</h2>
+    <p class="movie-meta">APT_V · 2024</p>
+    <span class="review-toggle" data-review="aptv">阅读评语</span>
+    <div class="review-content" id="review-aptv">
+      <p>下饭神剧，真是吓我一雷，这种精神污染的感觉还是很新颖，比直接的跳杀要更吸引我！里面还有一些民俗和宗教，以及一些很中国的内容，比如那个儿歌，所以真实性很足，更吓人了！我小宝宝吓得都躲到我背后去看了！胆子大一点啊喂！以后可咋一个人住呢，好愁。。。</p>
+    </div>
   </div>
 </article>
 
@@ -895,7 +1041,7 @@ const pwBtn=document.getElementById('pwBtn');
 
 function tryPassword(){
   const val=pwInput.value.trim();
-  if(val==='17'){
+  if(val==='22'){
     // 密码正确 → 翻页动画
     pwOverlay.classList.add('flipping');
     // 翻页瞬间播 Bloody
@@ -968,9 +1114,10 @@ document.querySelectorAll('.review-toggle').forEach(btn=>{
 /* ===== FILM STRIP ===== */
 const filmStrip=document.getElementById('filmStrip');
 if(filmStrip){
-  const posters=['chainsaw-man','zootopia-2','the-wish','grave-encounters-1',
-    'backrooms','orphan','iron-fist-edu','broadcast-signal','grave-encounters-2',
-    'the-handmaiden','cmbyn','blue-warmest','we-made-bouquet','devil-wears-prada','suzume'];
+  const posters=['chainsaw-man','zootopia-2','the-wish','grave-encounters-1','inaga-apology',
+    'backrooms','ju-on','orphan','iron-fist-edu','broadcast-signal','grave-encounters-2',
+    'shan-cun-lao-shi','the-handmaiden','cmbyn','blue-warmest','we-made-bouquet',
+    'devil-wears-prada','suzume','ishiei-kikue','triangle','secret','aptv'];
   const items=[...posters,...posters]; // Duplicate for seamless loop
   items.forEach(p=>{
     const img=document.createElement('img');
@@ -1025,7 +1172,7 @@ const audio={
   bgVol:0.7, themeVol:0.75, hasDedicated:false,
 
   init(){
-    this.bg=new Audio('audio/bloody-mary-girl.mp4');
+    this.bg=new Audio('audio/音乐.mp4');
     this.bg.loop=true;this.bg.volume=this.bgVol;
     // 不自动播放，等密码正确后再播
 
@@ -1037,6 +1184,8 @@ const audio={
       'backrooms':'audio/backrooms-theme.mp4',
       'broadcast-signal':'audio/broadcast-signal-theme.mp4',
       'suzume':'audio/suzume-theme.mp4',
+      'secret':'audio/secret-theme.mp4',
+      'shan-cun-lao-shi':'audio/shan-cun-lao-shi-theme.mp4',
     };
 
     this.bg.addEventListener('error',()=>console.warn('🔇 背景音乐加载失败'));
@@ -1056,6 +1205,7 @@ const audio={
       this.hasDedicated=true;
       this._fade(this.bg,0); // Bloody 停掉
       this.theme.src=this.tracks[k];
+      this.theme.loop=k!=='broadcast-signal';
       this.theme.play().catch(()=>{});
       this._fade(this.theme,this.muted?0:this.themeVol);
     }else{
